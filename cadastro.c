@@ -4,30 +4,35 @@
 typedef struct {
     char nome[50];
     int idade;
-    int cpf;
-    char email[50]; 
+    char cpf[12];
+    char email[50];
     int pk;
 } Cadastro;
 
 void cadastro(Cadastro pessoa[], int *quantidade) {
     int qtd;
-    printf("Insira a quantidade de pessoas que você deseja cadastrar:");
+    printf("Insira a quantidade de pessoas que você deseja cadastrar: ");
     scanf("%d", &qtd);
 
+    if (*quantidade + qtd > 999) {
+        printf("Limite de cadastros alcançado!\n");
+        return;
+    }
+
     for (int i = *quantidade; i < *quantidade + qtd; i++) {
-        pessoa[i].pk = i + 1; 
+        pessoa[i].pk = i + 1;
         printf("Digite o seu nome: ");
         scanf(" %[^\n]s", pessoa[i].nome);
         printf("Digite a sua idade: ");
         scanf("%d", &pessoa[i].idade);
-        printf("Digite o seu CPF: ");
-        scanf("%d", &pessoa[i].cpf);
+        printf("Digite o seu CPF (somente números): ");
+        scanf("%s", pessoa[i].cpf);
         printf("Digite o seu E-MAIL: ");
         scanf("%s", pessoa[i].email);
         printf("Cadastro concluído! PK: %d\n\n", pessoa[i].pk);
     }
 
-    *quantidade += qtd; 
+    *quantidade += qtd;
 }
 
 void exibirdados(Cadastro pessoa[], int quantidade) {
@@ -41,13 +46,15 @@ void exibirdados(Cadastro pessoa[], int quantidade) {
         printf("PK: %d\n", pessoa[i].pk);
         printf("Nome: %s\n", pessoa[i].nome);
         printf("Idade: %d\n", pessoa[i].idade);
-        printf("CPF: %d\n", pessoa[i].cpf);
+        printf("CPF: %s\n", pessoa[i].cpf);
         printf("E-MAIL: %s\n\n", pessoa[i].email);
     }
 }
 
 void pesquisar(Cadastro pessoa[], int quantidade) {
-    int opcao, valor;
+    int opcao;
+    char valor[12];
+
     printf("Pesquisar por:\n");
     printf("1. CPF\n");
     printf("Escolha uma opção: ");
@@ -55,14 +62,14 @@ void pesquisar(Cadastro pessoa[], int quantidade) {
 
     if (opcao == 1) {
         printf("Digite o CPF: ");
-        scanf("%d", &valor);
+        scanf("%s", valor);
         for (int i = 0; i < quantidade; i++) {
-            if (pessoa[i].cpf == valor) {
-                printf("\n--- ---\n");
+            if (strcmp(pessoa[i].cpf, valor) == 0) {
+                printf("\n--- DADOS ENCONTRADOS ---\n");
                 printf("PK: %d\n", pessoa[i].pk);
                 printf("Nome: %s\n", pessoa[i].nome);
                 printf("Idade: %d\n", pessoa[i].idade);
-                printf("CPF: %d\n", pessoa[i].cpf);
+                printf("CPF: %s\n", pessoa[i].cpf);
                 printf("E-MAIL: %s\n\n", pessoa[i].email);
                 return;
             }
@@ -73,7 +80,7 @@ void pesquisar(Cadastro pessoa[], int quantidade) {
 
 int main() {
     Cadastro pessoa[999];
-    int quantidade = 0; 
+    int quantidade = 0;
     int op;
 
     do {
@@ -97,11 +104,10 @@ int main() {
                 break;
             case 4:
                 printf("Saindo...\n");
-                break;
+                break;  
             default:
                 printf("Opção inválida.\n");
         }
-    } while (op != 4);
-
+    } while (op != 4); 
     return 0;
 }
